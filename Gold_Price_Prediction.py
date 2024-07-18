@@ -123,7 +123,7 @@ fig=px.scatter(data, x='GLD', y='USO',color='SLV',size='GLD',trendline='ols',
 fig.show()
 
 
-# In[41]:
+# In[12]:
 
 
 
@@ -131,7 +131,7 @@ fig=px.histogram(data, x='GLD',title='Gold Price')
 fig.show()
 
 
-# In[51]:
+# In[13]:
 
 
 data['Date'] = pd.to_datetime(data['Date'])
@@ -139,7 +139,7 @@ data['Year']=data['Date'].dt.year
 data.head()
 
 
-# In[59]:
+# In[14]:
 
 
 # Group the data by year and calculate the mean gold price for each year
@@ -160,14 +160,14 @@ fig.update_layout(
 fig.show()
 
 
-# In[12]:
+# In[15]:
 
 
 correlation= data.corr()
 print(correlation['GLD'].sort_values(ascending=False))
 
 
-# In[13]:
+# In[16]:
 
 
 data.head()
@@ -175,7 +175,7 @@ data.head()
 
 # # Train-Test Splitting
 
-# In[14]:
+# In[17]:
 
 
 from sklearn.model_selection import train_test_split
@@ -187,7 +187,7 @@ x_train, x_test, y_train, y_test=train_test_split(x,y, test_size=0.10)
 # # Creating Pipeline
 # 
 
-# In[15]:
+# In[18]:
 
 
 from sklearn.pipeline import Pipeline
@@ -195,7 +195,7 @@ from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler
 
 
-# In[16]:
+# In[19]:
 
 
 pipeline=Pipeline([
@@ -209,7 +209,7 @@ x_train_new=pipeline.fit_transform(x_train)
 
 # # Price Prediction
 
-# In[17]:
+# In[20]:
 
 
 # selecting a desired model
@@ -226,7 +226,7 @@ model.fit(x_train_new,y_train)
 
 
 
-# In[18]:
+# In[21]:
 
 
 #Select some test data for predictions using array slicing(test data lekr testing kr rhe instead of inputting mannually)
@@ -238,23 +238,25 @@ prepared_data=pipeline.transform(some_x_data) # if u don't wanna create pipeline
 
 # # Predictions
 
-# In[19]:
+# In[22]:
 
 
 # model.predict(some_x_data) test ki predictions hn
 predictions=model.predict(some_x_data)
-print(predictions)
-list(some_y_data)
+print(predictions) #this is our prediction value
+list(some_y_data) #and this is our actual value of those(x_train new)
 
 
-# In[20]:
+# In[23]:
 
 
 comparison=pd.DataFrame({'Actual':some_y_data,'Predicted':predictions})
 print(comparison)
 
 
-# In[21]:
+# # Measuring the model's Accuracy
+
+# In[24]:
 
 
 from sklearn.metrics import mean_absolute_error, mean_squared_error
@@ -266,7 +268,7 @@ print('Mean Absolute Error:', mae)
 print('Mean Square Error:', mse)
 
 
-# In[22]:
+# In[25]:
 
 
 rmse=np.sqrt(mse)
@@ -275,7 +277,7 @@ print(rmse)
 
 # # Testig the model on test data
 
-# In[23]:
+# In[26]:
 
 
 x_test_preapred=pipeline.transform(x_test)
@@ -289,19 +291,19 @@ test_rmse=np.sqrt(test_mse)
 print(comparison)
 
 
-# In[24]:
+# In[27]:
 
 
 print(test_mse)
 
 
-# In[25]:
+# In[28]:
 
 
 print(test_rmse)
 
 
-# In[26]:
+# In[29]:
 
 
 print(test_mae)
@@ -309,7 +311,7 @@ print(test_mae)
 
 # # Cross Validation 
 
-# In[27]:
+# In[30]:
 
 
 from sklearn.model_selection import cross_val_score
@@ -317,26 +319,26 @@ cross_scores=cross_val_score(model,x_train_new,y_train, scoring='neg_mean_square
 rmse_scores=np.sqrt(-cross_scores)
 
 
-# In[28]:
+# In[31]:
 
 
 print(rmse_scores)
 
 
-# In[29]:
+# In[32]:
 
 
 y_train.min()
 # y_train.max()
 
 
-# In[30]:
+# In[33]:
 
 
 y_train.max()
 
 
-# In[31]:
+# In[34]:
 
 
 # Range of the target variable is from 70 to 184. So the rmse is excellent.
@@ -344,14 +346,14 @@ y_train.max()
 
 # # Saving it for the  Future
 
-# In[32]:
+# In[35]:
 
 
 from joblib import dump,load
 dump(model,'Gold_model.joblib')
 
 
-# In[33]:
+# In[36]:
 
 
 # data.head()
@@ -359,7 +361,7 @@ dump(model,'Gold_model.joblib')
 
 # # Testing of Joblib Saved Model
 
-# In[36]:
+# In[37]:
 
 
 model=load("Gold_model.joblib")
